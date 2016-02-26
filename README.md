@@ -7,6 +7,7 @@
 在我看来，虽然它们很前沿，都是基于 ES6/7 开发的<br>
 但是它们又都经历了 ES6 generator/yield 和 ES7 async/await 之痛，以至于短短时间内衍生出了两个版本<br>
 只能说，这个过程太痛，作为框架的使用者折腾不起<br>
-而 Express 4 是一个已经很稳定的版本了（本项目使用的版本，后面说 Express 都是指 Express 4），其开发团队也早已专注到了 Koa 的开发中<br>
+而 Express 4 是一个已经很稳定的版本了（本项目使用的版本，后面说 Express 都是指 Express 4）
+Express 开发团队也早已专注到了 Koa 的开发中，Express 再改变的可能微乎其微<br>
 所以这个时候用 Express，写关于 Express 的东西，使用方式和 API 几乎就不会有什么变化了<br>
 不会出现后面看到文章，却和实际使用不一致的情况。<br><br>
