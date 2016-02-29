@@ -1,60 +1,58 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var express = require('express'),
+    path = require('path'),
+    favicon = require('serve-favicon'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    routes = require('./routes/main');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
+//生成一个 express 实例
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+//指定 web 应用的标题栏小图标的路径为：/static/favicon.ico
+app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
+//加载日志中间件
 app.use(logger('dev'));
+//加载解析 json 的中间件
 app.use(bodyParser.json());
+//加载解析 urlencoded 请求体的中间件
 app.use(bodyParser.urlencoded({ extended: false }));
+//加载解析 cookie 的中间件
 app.use(cookieParser());
+//设置 static 文件夹为存放静态文件的目录
 app.use(express.static(path.join(__dirname, 'static')));
 
-app.use('/', routes);
-app.use('/users', users);
+//配置路由
+routes(app);
 
-// catch 404 and forward to error handler
+//捕获404错误，并转发到错误处理器
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
-// error handlers
 
-// development error handler
-// will print stacktrace
+//错误处理器
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
+    //开发环境下的错误处理器，将错误信息渲染 error 模版并显示到浏览器中
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
     });
-  });
 }
 
-// production error handler
-// no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+    //生产环境下的错误处理器，不会将错误信息泄露给用户
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
-
+//导出 app 实例供其他模块调用
 module.exports = app;
