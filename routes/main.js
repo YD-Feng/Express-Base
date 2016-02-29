@@ -3,9 +3,9 @@ var _ = require('underscore'),//引入 underscore 模块
     menuMod = require('./modules/menuMod'),//引入 menu 模块
     config = {
         get: {
-            '/user/list': userMod.getList,
+            '/user/list': userMod.getUserList,
             '/user/status': userMod.checkStatus,
-            '/menu/list': menuMod.getList
+            '/menu/list': menuMod.getMenuList
         },
         post: {
             '/user/save': userMod.save,

@@ -1,5 +1,5 @@
 var menuMod = {
-    getList: function (req, res) {
+    getMenuList: function (req, res) {
         res.send('menuList');
     },
     save: function (req, res) {

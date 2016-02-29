@@ -4,10 +4,12 @@ var express = require('express'),
     logger = require('morgan'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
-    routes = require('./routes/main');
+    routes = require('./routes/main'),
 
-//生成一个 express 实例
-var app = express();
+    //生成一个 express 实例
+    app = express();
+
+
 
 //指定 web 应用的标题栏小图标的路径为：/static/favicon.ico
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
