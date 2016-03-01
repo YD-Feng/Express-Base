@@ -3,7 +3,9 @@ var settings = {
     port: 3306,
     database: 'app',
     user: 'root',
-    password: 'root'
+    password: 'root',
+    sessionKey: 'test',
+    sessionSecret: 'test'
 };
 
 module.exports = settings;

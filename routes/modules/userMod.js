@@ -22,7 +22,10 @@ var userSrv = require('../../data/modules/userSrv'),
         }
     },
     checkStatus: function (req, res) {
-        res.send('userStatus');
+        req.sessionStore.destroy(req.session.id, function (err) {
+            if (err) throw err;
+            res.send('session已经清除');
+        });
     },
     save: function (req, res) {
         res.send('userSave');

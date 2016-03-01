@@ -5,6 +5,27 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     routes = require('./routes/main'),
+    mysql = require('mysql'),
+    settings = require('./data/settings'),
+    session = require('express-session'),
+    SessionStore = require('express-mysql-session'),
+
+    //生成一个 SessionStore 实例
+    sessionStore = new SessionStore({
+        host: settings.host,
+        port: settings.port,
+        user: settings.user,
+        password: settings.password,
+        database: settings.database,
+        schema: {
+            tableName: 'session',
+            columnNames: {
+                session_id: 'id',
+                expires: 'expires',
+                data: 'data'
+            }
+        }
+    }, mysql.createConnection(settings)),
 
     //生成一个 express 实例
     app = express();
@@ -23,6 +44,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 //设置 static 文件夹为存放静态文件的目录
 app.use(express.static(path.join(__dirname, 'static')));
+//加载解析 session 的中间件
+app.use(session({
+    key: settings.sessionKey,
+    secret: settings.sessionSecret,
+    cookie: {
+        maxAge: 6 * 60 * 60 * 1000
+    },
+    store: sessionStore,
+    rolling: true,
+    resave: false,
+    saveUninitialized: false
+}));
 
 //配置路由
 routes(app);
@@ -40,8 +73,9 @@ if (app.get('env') === 'development') {
     //开发环境下的错误处理器，将错误信息渲染 error 模版并显示到浏览器中
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
+        res.send('error', {
+            code: 0,
+            msg: err.message,
             error: err
         });
     });
@@ -50,9 +84,9 @@ if (app.get('env') === 'development') {
 app.use(function(err, req, res, next) {
     //生产环境下的错误处理器，不会将错误信息泄露给用户
     res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
+    res.send('error', {
+        code: 0,
+        msg: err.message
     });
 });
 

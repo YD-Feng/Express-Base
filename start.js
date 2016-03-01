@@ -22,7 +22,7 @@ server.on('error', onError);
 server.on('listening', onListening);
 
 //错误事件处理函数
-function onError(error) {
+function onError (error) {
     if (error.syscall !== 'listen') {
         throw error;
     }
@@ -45,7 +45,7 @@ function onError(error) {
 }
 
 //监听事件处理函数
-function onListening() {
+function onListening () {
     var addr = server.address(),
         bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
 
