@@ -1,5 +1,19 @@
 var connPool = require('../connPool'),
     userSrv = {
+        //用户信息核对
+        check: function (opts, callback) {
+            connPool.getConnection(function (err, connection) {
+                var SQL = 'SELECT * from user where name=' + connPool.escape(opts.userName) + ' and password=' + connPool.escape(opts.password);
+
+                connection.query(SQL, function (err, result) {
+                    if (err) throw err;
+                    callback(result);
+                    connection.release();//释放链接
+                });
+            });
+        },
+
+        //获取用户列表
         getUserList: function (opts, callback) {
             connPool.getConnection(function (err, connection) {
                 var flag = 0,
@@ -31,13 +45,6 @@ var connPool = require('../connPool'),
                     flag++;
                 }
 
-                if (!!opts.roleId) {
-                    str = (flag == 0 ? ' where ' : ' and ') + 'roleId=' + connPool.escape(opts.roleId);
-                    countSQL += str;
-                    listSQL += str;
-                    flag++;
-                }
-
                 if (!opts.pageSize) {
                     opts.pageSize = 30;
                 }
@@ -46,7 +53,7 @@ var connPool = require('../connPool'),
                     opts.currentPage = 1;
                 }
 
-                str = ' order by id limit ' + (opts.pageSize * (opts.currentPage - 1)) + ',' + opts.pageSize
+                str = ' order by id limit ' + (opts.pageSize * (opts.currentPage - 1)) + ',' + opts.pageSize;
 
                 listSQL += str;
 
@@ -65,11 +72,62 @@ var connPool = require('../connPool'),
                     });
                 });
             });
+        },
+
+        //检测用户名是否存在
+        checkUserName: function (opts, callback) {
+            connPool.getConnection(function (err, connection) {
+                var SQL = 'select * from user where name=' + connPool.escape(opts.userName);
+
+                if (typeof opts.id != 'undefined' && opts.id != '') {
+                    SQL += 'and id!=' + connPool.escape(opts.id);
+                }
+
+                connection.query(SQL, function (err, result) {
+                    if (err) throw err;
+                    callback(result);
+                    connection.release();//释放链接
+                });
+            });
+        },
+
+        //保存用户信息
+        save: function (opts, callback) {
+            connPool.getConnection(function (err, connection) {
+
+                if (typeof opts.id != 'undefined' && opts.id != '') {
+                    //传入ID，则编辑
+                    var strArr = [];
+
+                    if (typeof opts.userName != 'undefined' && opts.userName != '') {
+                        strArr.push('name=' + connPool.escape(opts.userName));
+                    }
+                    if (typeof opts.password != 'undefined' && opts.password != '') {
+                        strArr.push('password=' + connPool.escape(opts.password));
+                    }
+
+                    connection.query('update user set ' + strArr.join(',') + ' where id = ' + connPool.escape(opts.id), function (err, result) {
+                        if (err) throw err;
+                        callback(result);
+                        connection.release();//释放链接
+                    });
+
+                } else {
+                    //没传入ID，则新增
+                    var values = [
+                        connPool.escape(opts.userName),
+                        connPool.escape(opts.password)
+                    ];
+
+                    connection.query('insert into user (name,password) values(' + values.join(',') + ')', function (err, result) {
+                        if (err) throw err;
+                        callback(result);
+                        connection.release();//释放链接
+                    });
+                }
+
+            });
         }
     };
 
 module.exports = userSrv;
-
-/*userServ.getUserList = function (opts, callback) {
-
-};*/

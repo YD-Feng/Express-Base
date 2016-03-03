@@ -74,7 +74,7 @@ if (app.get('env') === 'development') {
     app.use(function(err, req, res, next) {
         res.status(err.status || 500);
         res.send('error', {
-            code: 0,
+            code: err.status || 500,
             msg: err.message,
             error: err
         });
@@ -85,7 +85,7 @@ app.use(function(err, req, res, next) {
     //生产环境下的错误处理器，不会将错误信息泄露给用户
     res.status(err.status || 500);
     res.send('error', {
-        code: 0,
+        code: err.status || 500,
         msg: err.message
     });
 });

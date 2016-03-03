@@ -8,6 +8,7 @@ var _ = require('underscore'),//引入 underscore 模块
             '/menu/list': menuMod.getMenuList
         },
         post: {
+            '/user/login': userMod.login,
             '/user/save': userMod.save,
             '/menu/save': menuMod.save
         }
