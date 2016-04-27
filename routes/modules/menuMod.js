@@ -1,4 +1,4 @@
-var menuSrv = require('../../data/modules/menuSrv'),
+var menuSrv = require('../../dataSrv/modules/menuSrv'),
     menuMod = {
         //获取菜单列表
         getMenuList: function (req, res) {

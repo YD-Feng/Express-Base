@@ -1,6 +1,25 @@
 #!/usr/bin/env node
 //上面一行表明此文件是 node 可执行文件
 
+/* * ━━━━━━━━ 神兽出没 ━━━━━━━━
+ *        ┏┓          ┏┓
+ *       ┏┛┻━━━━━━━━━━┛┻┓
+ *       ┃              ┃
+ *       ┃      ━━      ┃
+ *       ┃  ━┳━┛  ┗━┳━  ┃     Code is far away from bug
+ *       ┃              ┃     with the animal protecting
+ *       ┃     ━┻━      ┃
+ *       ┃              ┃
+ *       ┗━━━┓      ┏━━━┛
+ *           ┃      ┃         神兽保佑,代码无bug
+ *           ┃      ┃
+ *           ┃      ┗━━━━━┓
+ *           ┃            ┣┓
+ *           ┃            ┏┛
+ *           ┗━┓┓┏━━━━┳┓┏━┛
+ * 　　　　     ┃┫┫    ┃┫┫
+ * 　　　　     ┗┻┛    ┗┻┛
+ * * ━━━━━━━━ 感觉萌萌哒 ━━━━━━━━ */
 
 var app = require('./app'),//引入 app.js 导出的 app 实例
     debug = require('debug')('test:server'),//引入 debug 模块，打印调试日志

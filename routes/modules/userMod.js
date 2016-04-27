@@ -1,5 +1,5 @@
 var crypto = require('crypto'),
-    userSrv = require('../../data/modules/userSrv'),
+    userSrv = require('../../dataSrv/modules/userSrv'),
     userMod = {
         //用户登录
         login: function () {

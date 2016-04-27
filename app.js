@@ -6,7 +6,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     routes = require('./routes/main'),
     mysql = require('mysql'),
-    settings = require('./data/settings'),
+    settings = require('./dataSrv/settings'),
     session = require('express-session'),
     SessionStore = require('express-mysql-session'),
 
