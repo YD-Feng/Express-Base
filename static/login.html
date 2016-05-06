@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>  <html class="ie ie6 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 7]>     <html class="ie ie7 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 8]>     <html class="ie ie8 lte9 lte8"> <![endif]-->
+<!--[if IE 9]>     <html class="ie ie9 lte9"> <![endif]-->
+<!--[if gt IE 9]>  <html> <![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="renderer" content="webkit" />
+    <title>比价工具</title>
+    <link rel="stylesheet" href="../dist/lib/H/css/H.min.css">
+    <link rel="stylesheet" href="../dist/css/common.css">
+    <script type="text/javascript" src="../dist/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../dist/lib/H/js/H.min.js"></script>
+</head>
+<body class="login-bg">
+<div class="login-box">
+    <h1 class="title" ng-click="register()"></h1>
+    <form id="J-form" ng-submit="login()">
+        <ul class="form-warp">
+            <li class="form-item">
+                <span class="icon-wrap">&nbsp;<i class="icon-font">&#xe604;</i></span>
+                <input name="userName" type="text" class="ui-text-large" placeholder="请输入用户名">
+            </li>
+            <li class="form-item">
+                <span class="icon-wrap">&nbsp;<i class="icon-font">&#xe605;</i></span>
+                <input name="password" type="password" class="ui-text-large" placeholder="请输入密码">
+            </li>
+        </ul>
+        <div class="btn-wrap">
+            <button type="submit" class="ui-btn ui-btn-large">登　　 录</button>
+        </div>
+    </form>
+</div>
+<div class="login-tips-wrap hidden">
+    <div id="J-err-msg" class="login-tips"></div>
+</div>
+
+<script type="text/javascript">
+    H.JsLoader.get({
+        name: 'index',
+        url: '../dist/js/login.js'
+    });
+</script>
+</body>
+</html>

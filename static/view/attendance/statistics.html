@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>  <html class="ie ie6 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 7]>     <html class="ie ie7 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 8]>     <html class="ie ie8 lte9 lte8"> <![endif]-->
+<!--[if IE 9]>     <html class="ie ie9 lte9"> <![endif]-->
+<!--[if gt IE 9]>  <html> <![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="renderer" content="webkit" />
+    <title>JAYEE-OA</title>
+    <link rel="stylesheet" href="../../dist/css/common-frame-page.css">
+    <link rel="stylesheet" href="../../dist/lib/H/css/H.min.css">
+    <script type="text/javascript" src="../../dist/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../../dist/lib/H/js/H.min.js"></script>
+</head>
+<body>
+<h2 class="cm-title">
+    <b>考勤管理</b>&nbsp;&gt;&nbsp;<span class="cm-text-red">考勤信息统计</span>
+</h2>
+
+<form id="J-form" class="cm-form mt10px">
+    <table class="cm-form-table">
+        <tr>
+            <td width="80" class="col-txt text-right">导入文件：</td>
+            <td width="250" class="pr5px">
+                <label class="cm-file">
+                    <input type="file" name="table" class="cm-file-input">
+                    <span class="J-file-text cm-file-text">请选择文件</span>
+                    <span class="cm-file-btn">浏览</span>
+                </label>
+            </td>
+            <td>
+                <button id="J-upload-btn" type="button" class="ui-btn ui-btn-violet ui-btn-small">导入数据</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div class="cm-table-top mt15px">
+    <span class="fl">考勤信息列表</span>
+</div>
+<div id="J-table-wrap" class="sp-table-wrap">
+    <div class="sp-no-data">
+        <div class="inner">请先导入数据</div>
+    </div>
+</div>
+
+<script type="text/html" id="J-list-tpl">
+    <% if (list.length > 0) { %>
+    <table class="cm-table cm-table-nowrap">
+        <tr class="text-left">
+            <th>考勤号码</th>
+            <th>姓名</th>
+            <th>应到（工作日）</th>
+            <th>实到（工作日）</th>
+            <th>旷工（工作日）</th>
+            <th>迟到（分钟）</th>
+            <th>早到（分钟）</th>
+            <th>加班（小时）</th>
+            <th>请假（小时）</th>
+            <th>公出（工作日）</th>
+            <th>未签到（数量）</th>
+            <th>未签（数量）</th>
+            <th>应到（数量）</th>
+            <th>病假（数量）</th>
+            <th>事假（小时）</th>
+            <th>公出（工作日）</th>
+            <th>工作时间（小时）</th>
+            <th>出勤率（%）</th>
+        </tr>
+        <tbody id="J-list">
+            <% $.each(list, function (i, department) { %>
+            <tr>
+                <td class="separated" colspan="18"><%= department.department_name %></td>
+            </tr>
+            <% $.each(department.list, function (j, item) { %>
+            <tr id="J-employee-<%= i %>-<%= j %>">
+                <td><input type="text" name="id" value="<%= item.id %>" data-index="<%= i %>" data-sub-index="<%= j %>" style="width: 80px;" readonly></td>
+                <td><input type="text" name="name" value="<%= item.name %>" data-index="<%= i %>" data-sub-index="<%= j %>" style="width: 80px;"></td>
+                <td><input type="text" name="should_arrive" value="<%= item.should_arrive %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="actual_arrive" value="<%= item.actual_arrive %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="absenteeism" value="<%= item.absenteeism %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="be_late" value="<%= item.be_late %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="be_early" value="<%= item.be_early %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="over_time" value="<%= item.over_time %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="ask_for_leave" value="<%= item.ask_for_leave %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="out_for_business" value="<%= item.out_for_business %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="has_not_sign_in" value="<%= item.has_not_sign_in %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="has_not_sign" value="<%= item.has_not_sign %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="should_arrive_sp" value="<%= item.should_arrive_sp %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="ask_for_leave_illness" value="<%= item.ask_for_leave_illness %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="should_arrive_matter" value="<%= item.should_arrive_matter %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="out_for_business_sp" value="<%= item.out_for_business_sp %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="work_time" value="<%= item.work_time %>" data-index="<%= i %>" data-sub-index="<%= j %>"></td>
+                <td><input type="text" name="per" value="<%= item.per %>" data-index="<%= i %>" data-sub-index="<%= j %>" readonly></td>
+            </tr>
+            <% }); %>
+            <tr class="J-sub-total total">
+                <td colspan="2">小计（<%= department.count %>人）</td>
+                <td><input type="text" name="should_arrive" value="<%= department.should_arrive %>" readonly></td>
+                <td><input type="text" name="actual_arrive" value="<%= department.actual_arrive %>" readonly></td>
+                <td><input type="text" name="absenteeism" value="<%= department.absenteeism %>" readonly></td>
+                <td><input type="text" name="be_late" value="<%= department.be_late %>" readonly></td>
+                <td><input type="text" name="be_early" value="<%= department.be_early %>" readonly></td>
+                <td><input type="text" name="over_time" value="<%= department.over_time %>" readonly></td>
+                <td><input type="text" name="ask_for_leave" value="<%= department.ask_for_leave %>" readonly></td>
+                <td><input type="text" name="out_for_business" value="<%= department.out_for_business %>" readonly></td>
+                <td><input type="text" name="has_not_sign_in" value="<%= department.has_not_sign_in %>" readonly></td>
+                <td><input type="text" name="has_not_sign" value="<%= department.has_not_sign %>" readonly></td>
+                <td><input type="text" name="should_arrive_sp" value="<%= department.should_arrive_sp %>" readonly></td>
+                <td><input type="text" name="ask_for_leave_illness" value="<%= department.ask_for_leave_illness %>" readonly></td>
+                <td><input type="text" name="should_arrive_matter" value="<%= department.should_arrive_matter %>" readonly></td>
+                <td><input type="text" name="out_for_business_sp" value="<%= department.out_for_business_sp %>" readonly></td>
+                <td><input type="text" name="work_time" value="<%= department.work_time %>" readonly></td>
+                <td><input type="text" name="per" value="<%= department.per %>" readonly></td>
+            </tr>
+            <% }); %>
+            <tr class="J-total total">
+                <td colspan="2">总计（<%= total.count %>人）</td>
+                <td><input type="text" name="should_arrive" value="<%= total.should_arrive %>" readonly></td>
+                <td><input type="text" name="actual_arrive" value="<%= total.actual_arrive %>" readonly></td>
+                <td><input type="text" name="absenteeism" value="<%= total.absenteeism %>" readonly></td>
+                <td><input type="text" name="be_late" value="<%= total.be_late %>" readonly></td>
+                <td><input type="text" name="be_early" value="<%= total.be_early %>" readonly></td>
+                <td><input type="text" name="over_time" value="<%= total.over_time %>" readonly></td>
+                <td><input type="text" name="ask_for_leave" value="<%= total.ask_for_leave %>" readonly></td>
+                <td><input type="text" name="out_for_business" value="<%= total.out_for_business %>" readonly></td>
+                <td><input type="text" name="has_not_sign_in" value="<%= total.has_not_sign_in %>" readonly></td>
+                <td><input type="text" name="has_not_sign" value="<%= total.has_not_sign %>" readonly></td>
+                <td><input type="text" name="should_arrive_sp" value="<%= total.should_arrive_sp %>" readonly></td>
+                <td><input type="text" name="ask_for_leave_illness" value="<%= total.ask_for_leave_illness %>" readonly></td>
+                <td><input type="text" name="should_arrive_matter" value="<%= total.should_arrive_matter %>" readonly></td>
+                <td><input type="text" name="out_for_business_sp" value="<%= total.out_for_business_sp %>" readonly></td>
+                <td><input type="text" name="work_time" value="<%= total.work_time %>" readonly></td>
+                <td><input type="text" name="per" value="<%= total.per %>" readonly></td>
+            </tr>
+        </tbody>
+    </table>
+    <% } else { %>
+    <div class="sp-no-data">
+        <div class="inner">没有提取到任何数据</div>
+    </div>
+    <% } %>
+</script>
+
+<script>
+    H.JsLoader.get({
+        name: 'index',
+        url: '../../dist/js/attendance/statistics.min.js'
+    });
+</script>
+</body>
+</html>

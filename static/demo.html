@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>  <html class="ie ie6 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 7]>     <html class="ie ie7 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 8]>     <html class="ie ie8 lte9 lte8"> <![endif]-->
+<!--[if IE 9]>     <html class="ie ie9 lte9"> <![endif]-->
+<!--[if gt IE 9]>  <html> <![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="renderer" content="webkit" />
+    <title>公共样式演示demo</title>
+    <link rel="stylesheet" href="../dist/css/common-frame-page.css">
+    <link rel="stylesheet" href="../dist/lib/H/css/H.min.css">
+    <script type="text/javascript" src="../dist/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../dist/lib/H/js/H.min.js"></script>
+</head>
+<body>
+<h2 class="cm-title">
+    <b>流程审批</b>&nbsp;&gt;&nbsp;<span class="cm-text-red">加班申请</span>
+</h2>
+<ul class="cm-nav">
+    <li class="item active">按销售店铺设置</li>
+    <li class="item">按商品分类设置</li>
+    <li class="item">按商品设置</li>
+    <li class="fl ml20px cm-text-blue"><span class="fl">分配库存时，优先取商品设置，再取商品分类设置，最后取店铺设置</span></li>
+    <li class="clear"></li>
+</ul>
+
+<form class="cm-form mt10px">
+    <table class="cm-form-table">
+        <tr>
+            <td width="80" class="col-txt text-right">姓名：</td>
+            <td width="200" class="col-input"><input type="text" class="ui-text-small"></td>
+            <td width="80" class="col-txt text-right">年龄：</td>
+            <td width="200" class="col-input"><input type="text" class="ui-text-small"></td>
+            <td width="80" class="col-txt text-right">性别：</td>
+            <td width="200" class="col-input"><input type="text" class="ui-text-small"></td>
+            <td width="200" class="text-center">
+                <button type="submit" class="ui-btn ui-btn-violet ui-btn-small">查询</button>
+                <button type="submit" class="ui-btn ui-btn-blue ui-btn-small ml5px">导出</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div class="cm-table-top mt15px">
+    <span class="fl">商品基础信息</span>
+    <span class="fr"></span>
+</div>
+<table id="J-goods-msg" class="cm-msg-table">
+    <tr>
+        <td class="col-key text-center" width="100">商品名称</td>
+        <td class="col-value" name="goods_name"></td>
+        <td class="col-key text-center" width="100">通用名</td>
+        <td class="col-value" name="common_name"></td>
+        <td class="col-key text-center" width="100">规格</td>
+        <td class="col-value" name="sku_name"></td>
+        <td class="col-key text-center" width="100">品牌名称</td>
+        <td class="col-value" name="goods_brand"></td>
+        <td class="col-key text-center" width="100">国药准字</td>
+        <td class="col-value" name="prove_no"></td>
+    </tr>
+    <tr>
+        <td class="col-key text-center">生产厂家</td>
+        <td class="col-value" name="produce_factory"></td>
+        <td class="col-key text-center">B2C售价</td>
+        <td class="col-value" name="b2c_price"></td>
+        <td class="col-key text-center">大白售价</td>
+        <td class="col-value" name="dabai_discount_price"></td>
+        <td class="col-key text-center">SKU编码</td>
+        <td class="col-value" name="sku"></td>
+        <td class="col-key text-center"></td>
+        <td class="col-value"></td>
+    </tr>
+</table>
+
+<div class="cm-table-top mt15px">
+    <span class="fl">商品库存列表</span>
+    <span class="fr"></span>
+</div>
+<table class="cm-table">
+    <tr class="text-left">
+        <th>商品编号</th>
+        <th>商品名称</th>
+        <th>实物库存</th>
+        <th>销售库存</th>
+    </tr>
+    <tr>
+        <td>1233456657</td>
+        <td>北京同仁堂 柏子养心丸 60g</td>
+        <td>120</td>
+        <td>110</td>
+    </tr>
+    <tr>
+        <td>1233456657</td>
+        <td>北京同仁堂 柏子养心丸 60g</td>
+        <td>120</td>
+        <td>110</td>
+    </tr>
+    <tr>
+        <td>1233456657</td>
+        <td>北京同仁堂 柏子养心丸 60g</td>
+        <td>120</td>
+        <td>110</td>
+    </tr>
+    <tr>
+        <td>1233456657</td>
+        <td>北京同仁堂 柏子养心丸 60g</td>
+        <td>120</td>
+        <td>110</td>
+    </tr>
+</table>
+<div id="J-page-wrap" class="cm-pager-wrap"></div>
+
+<script type="text/html" id="J-page-tpl">
+    <span class="ui-pager-txt">
+        共<%= total %>条数据&nbsp;&nbsp;&nbsp;&nbsp;<em><%= apg %></em>&nbsp;/&nbsp;<%= pgc %>
+    </span>
+    <div class="ui-pager">
+        <% $.each(els, function (i, item) { %>
+        <a class="J-page-to <%= item.cls %>" data-pg="<%= item.pg %>"><%= item.name %></a>
+        <% }) %>
+    </div>
+</script>
+
+<script>
+    var pagerA = new H.Pager({
+        tplB : $('#J-page-tpl').html(),
+        wrapB : $('#J-page-wrap'),
+        goToPageFunc : function (pageNum) {
+            pagerA.render({
+                pg: pageNum,
+                total: 120,
+                ps: 10
+            });
+        }
+    });
+
+    pagerA.render({
+        pg: 5,
+        total: 120,
+        ps: 10
+    });
+</script>
+</body>
+</html>

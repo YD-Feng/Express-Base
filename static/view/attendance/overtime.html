@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>  <html class="ie ie6 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 7]>     <html class="ie ie7 lte9 lte8 lte7"> <![endif]-->
+<!--[if IE 8]>     <html class="ie ie8 lte9 lte8"> <![endif]-->
+<!--[if IE 9]>     <html class="ie ie9 lte9"> <![endif]-->
+<!--[if gt IE 9]>  <html> <![endif]-->
+<!--[if !IE]><!--> <html> <!--<![endif]-->
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="renderer" content="webkit" />
+    <title>JAYEE-OA</title>
+    <link rel="stylesheet" href="../../dist/css/common-frame-page.css">
+    <link rel="stylesheet" href="../../dist/lib/H/css/H.min.css">
+    <script type="text/javascript" src="../../dist/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../../dist/lib/H/js/H.min.js"></script>
+</head>
+<body>
+<h2 class="cm-title">
+    <b>考勤管理</b>&nbsp;&gt;&nbsp;<span class="cm-text-red">加班信息统计</span>
+</h2>
+
+<form id="J-form" class="cm-form mt10px">
+    <table class="cm-form-table">
+        <tr>
+            <td width="80" class="col-txt text-right">导入文件：</td>
+            <td width="250" class="pr5px">
+                <label class="cm-file">
+                    <input type="file" name="table" class="cm-file-input">
+                    <span class="J-file-text cm-file-text">请选择文件</span>
+                    <span class="cm-file-btn">浏览</span>
+                </label>
+            </td>
+            <td>
+                <button id="J-upload-btn" type="button" class="ui-btn ui-btn-violet ui-btn-small">导入数据</button>
+            </td>
+            <td class="pl20px">
+                <button id="J-update-btn" type="button" class="ui-btn ui-btn-green ui-btn-small">重新统计</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<div class="cm-table-top mt15px">
+    <span class="fl">加班信息列表<span class="cm-text-blue ml10px">（蓝色列为假日，可通过点解表头的日期来设置该日是否为假日）</span></span>
+</div>
+<div id="J-table-wrap" class="sp-table-wrap">
+    <div class="sp-no-data">
+        <div class="inner">请先导入数据</div>
+    </div>
+</div>
+
+<script type="text/html" id="J-list-tpl">
+    <% if (detail.length > 0) { %>
+    <table class="cm-table cm-table-nowrap">
+        <tr class="text-left">
+            <th>考勤号码</th>
+            <th>姓名</th>
+            <%
+            $.each(th, function (i, item) {
+            %>
+            <th class="J-set-holiday set-holiday" data-index="<%= i %>"><%= item.date + '(' + item.dayName + ')' %></th>
+            <% }); %>
+            <th>平时加班（小时）</th>
+            <th>周末假日（小时）</th>
+            <th>加班合计（小时）</th>
+        </tr>
+        <tbody id="J-list">
+        <% $.each(detail, function (i, employee) { %>
+        <tr class="J-employee">
+            <td><input type="text" name="id" value="<%= employee.id %>" data-index="<%= i %>" style="width: 80px;" readonly></td>
+            <td><input type="text" name="name" value="<%= employee.name %>" data-index="<%= i %>" style="width: 80px;"></td>
+            <%
+            $.each(employee.list, function (j, item) {
+                var cls = '';
+                if ($.inArray(j, isWeekendList) != -1) {
+                    cls = 'status-holiday';
+                }
+            %>
+            <td class="J-item J-item-<%= j %> <%= cls %>">
+                <input type="text" name="list_item" value="<%= item %>" data-index="<%= i %>" data-sub-index="<%= j %>">
+            </td>
+            <% }); %>
+            <td><input type="text" name="work_day_total" value="<%= employee.work_day_total %>" data-index="<%= i %>" readonly></td>
+            <td><input type="text" name="holiday_total" value="<%= employee.holiday_total %>" data-index="<%= i %>" readonly></td>
+            <td><input type="text" name="total" value="<%= employee.total %>" data-index="<%= i %>" readonly></td>
+        </tr>
+        <% }); %>
+    </table>
+    <% } else { %>
+    <div class="sp-no-data">
+        <div class="inner">没有提取到任何数据</div>
+    </div>
+    <% } %>
+</script>
+
+<script>
+    H.JsLoader.get({
+        name: 'index',
+        url: '../../dist/js/attendance/overtime.min.js'
+    });
+</script>
+</body>
+</html>
