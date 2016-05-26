@@ -24,7 +24,7 @@
 var app = require('./app'),//引入 app.js 导出的 app 实例
     debug = require('debug')('test:server'),//引入 debug 模块，打印调试日志
     http = require('http'),//引入 http 模块，用以创建 http 服务
-    port = process.env.PORT || '3000',//环境变量如果设置了端口号，就用环境变量设置的，否则使用默认值3000
+    port = process.env.PORT || '3000',//系统环境变量 PORT 如果设置了端口号，就用环境变量设置的，否则使用默认值3000 （PS:process.env.xxx可以读取系统环境变量）
     server = null;
 
 //设置端口号
