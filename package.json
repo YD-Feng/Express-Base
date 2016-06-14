@@ -15,6 +15,7 @@
     "express-session": "^1.13.0",
     "formidable": "^1.0.17",
     "iconv-lite": "^0.4.13",
+    "log4js": "~0.6.36",
     "morgan": "^1.6.1",
     "mysql": "^2.10.0",
     "node-xlsx": "^0.6.0",

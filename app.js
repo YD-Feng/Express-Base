@@ -9,6 +9,7 @@ var express = require('express'),
     settings = require('./dataSrv/settings'),
     session = require('express-session'),
     SessionStore = require('express-mysql-session'),
+    log4js = require('log4js'),
 
     //生成一个 SessionStore 实例
     sessionStore = new SessionStore({
@@ -31,6 +32,23 @@ var express = require('express'),
     app = express();
 
 
+//日志记录相关配置
+log4js.configure({
+    appenders: [
+        {
+            type: 'console'
+        },//控制台输出
+        {
+            type: 'dateFile',
+            filename: 'logs/logInfo',
+            pattern: '-yyyy-MM-dd.log',
+            maxLogSize: 20480,
+            alwaysIncludePattern: true,
+            backups: 4
+        }//日期文件格式
+    ],
+    replaceConsole: true
+});
 
 //指定 web 应用的标题栏小图标的路径为：/static/favicon.ico
 app.use(favicon(path.join(__dirname, 'static', 'favicon.ico')));
@@ -56,6 +74,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+//加载日志记录的中间件
+app.use(log4js.connectLogger(log4js.getLogger(), {
+    level: log4js.levels.INFO
+}));
 
 //配置路由
 routes(app);
@@ -70,8 +92,9 @@ app.use(function(req, res, next) {
 
 //错误处理器
 if (app.get('env') === 'development') {
-    //开发环境下的错误处理器，将错误信息渲染 error 模版并显示到浏览器中
+    //开发环境下的错误处理器
     app.use(function(err, req, res, next) {
+        console.log(err);
         res.status(err.status || 500);
         res.send('error', {
             code: err.status || 500,
@@ -82,7 +105,8 @@ if (app.get('env') === 'development') {
 }
 
 app.use(function(err, req, res, next) {
-    //生产环境下的错误处理器，不会将错误信息泄露给用户
+    //生产环境下的错误处理器
+    console.log(err);
     res.status(err.status || 500);
     res.send('error', {
         code: err.status || 500,
