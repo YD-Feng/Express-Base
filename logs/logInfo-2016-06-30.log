@@ -50,3 +50,29 @@ Error: Not Found
     at trim_prefix (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:312:13)
     at e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:280:7
 [2016-06-30 12:27:25.666] [INFO] [default] - ::1 - - "GET /data/menu.json HTTP/1.1" error 53 "http://localhost:3000/" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36"
+[2016-06-30 16:45:51.048] [INFO] console - { [Error: Not Found] status: 404 }
+Error: Not Found
+    at e:\czf-work\myproject\Express-Base\app.js:87:15
+    at Layer.handle [as handle_request] (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:312:13)
+    at e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:330:12)
+    at next (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:271:10)
+    at e:\czf-work\myproject\Express-Base\node_modules\log4js\lib\connect-logger.js:103:5
+    at Layer.handle [as handle_request] (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:312:13)
+    at e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:280:7
+[2016-06-30 16:45:51.059] [INFO] [default] - ::1 - - "GET /view/ HTTP/1.1" error 53 "" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36"
+[2016-06-30 16:45:53.030] [INFO] console - { [Error: Not Found] status: 404 }
+Error: Not Found
+    at e:\czf-work\myproject\Express-Base\app.js:87:15
+    at Layer.handle [as handle_request] (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:312:13)
+    at e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:280:7
+    at Function.process_params (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:330:12)
+    at next (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:271:10)
+    at e:\czf-work\myproject\Express-Base\node_modules\log4js\lib\connect-logger.js:103:5
+    at Layer.handle [as handle_request] (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\layer.js:95:5)
+    at trim_prefix (e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:312:13)
+    at e:\czf-work\myproject\Express-Base\node_modules\express\lib\router\index.js:280:7
+[2016-06-30 16:45:53.036] [INFO] [default] - ::1 - - "GET /view/ HTTP/1.1" error 53 "" "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36"
