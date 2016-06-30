@@ -19,49 +19,31 @@
 <body>
 <!-- 页头 -->
 <div id="J-header" class="header">
-    <h1 class="title">
+    <h1 class="f16px fBold ml15px fl">
         <span class="text-red">Z</span>-OA
     </h1>
 
-    <ul class="top-nav">
-        <li class="item" title="退出" id="J-logout-btn">
-            <i class="icon-font icon-font-exit">&#xe602;</i>
-        </li>
-        <li id="J-user-menu" class="item user-avatar">
-            <div class="img-wrap"><img src="../dist/img/demo/avatar-small.png"></div>
-            <span class="txt" id="J-user-name">Jayee.Nam</span>
-            <!--<i class="icon-font icon-font-down">&#xe60a;</i>-->
-        </li>
-        <!--
-        <li class="item" title="任务">
-            <i class="icon-font icon-font-task">&#xe601;</i>
-            <span class="count">4</span>
-        </li>
-        <li class="item" title="信息">
-            <i class="icon-font icon-font-msg">&#xe600;</i>
-            <span class="count">6</span>
-        </li>
-        <li class="item" title="通知">
-            <i class="icon-font icon-font-notice">&#xe603;</i>
-            <span class="count">{{noticeCount}}</span>
-        </li>
-        -->
+    <div class="fr pr15px">
+        <span class="ml20px">您好！欢迎您【<em id="J-identity-name">超级管理员</em>】<em id="J-user-name">admin</em></span>
+        <span class="ml20px"><a id="J-link-change-pwd" href="user-change-pwd.html" target="mainFrameChangePwd" class="cm-link-white" name="修改密码"><i class="icon-font icon-pwd">&#xe600</i>修改密码</a></span>
+        <span class="ml20px"><a href="#" class="cm-link-white" id="J-link-logout"><i class="icon-font icon-exit">&#xe605</i>退出系统</a></span>
+    </div>
+</div>
+
+<!-- 侧边栏 -->
+<div id="J-sidebar" class="sidebar"></div>
+<div id="J-submenu-wrap" class="submenu-wrap"></div>
+
+<!-- tab栏 -->
+<div id="J-frame-tab" class="frame-tab">
+    <ul class="inner">
+        <li class="item active" data-name="home">平台首页</li>
     </ul>
 </div>
 
-<!-- 主内容 -->
+<!-- 内容区 -->
 <div id="J-container" class="container">
-
-    <!-- 侧边栏 -->
-    <div id="J-sidebar" class="sidebar"></div>
-
-    <!-- 内容区 -->
-    <div id="J-container-body" class="container-body">
-        <div class="container-body-inner">
-            <iframe class="iframe" name="mainFrame" frameborder="0" scrolling="auto" src="view/attendance/overtime.html"></iframe>
-        </div>
-    </div>
-
+    <iframe class="iframe" name="home" frameborder="0" scrolling="auto" src="demo.html"></iframe>
 </div>
 
 <!-- 页脚 -->
@@ -78,29 +60,59 @@
 </script>
 
 <script type="text/html" id="J-menu-tpl">
-    <ul id="J-s-menu-cls-one" class="s-menu-cls-one">
+    <ul class="inner">
         <%
         $.each(items, function (i, itemClsOne) {
-            var activeCls = '',
-                activeStyle = 'none';
-            if (i == 0) {
-                activeCls = 'active';
-                activeStyle = 'block';
+            var cls = '';
+
+            if (itemClsOne.submenu.length > 0) {
+                cls = 'J-has-submenu';
             }
         %>
-        <li class="item-cls-one <%= activeCls %>">
+        <li class="item <%= cls %>">
 
             <div class="J-item-cls-one-inner inner">
-                <%= itemClsOne.name %>
-                <i class="icon-font icon-font-arrow-left">&#xe60c;</i>
-                <i class="icon-font icon-font-arrow-down">&#xe60a;</i>
-                <span class="arrow"></span>
+                <% if (itemClsOne.href != '') { %>
+                <a href="<%= itemClsOne.href %>" target="<%= itemClsOne.target %><%= itemClsOne.id %>" name="<%= itemClsOne.name %>"><%= itemClsOne.name %></a>
+                <% } else { %>
+                <span class="fix-box"><%= itemClsOne.name %></span>
+                <% } %>
             </div>
 
             <% if (itemClsOne.submenu.length > 0) { %>
-            <ul class="J-s-menu-cls-two s-menu-cls-two" style="display: <%= activeStyle %>">
-                <% $.each(itemClsOne.submenu, function (i, itemClsTwo) { %>
-                <li class="item-cls-two"><a href="<%= itemClsTwo.href %>" target="<%= itemClsTwo.target %>"><%= itemClsTwo.name %></a></li>
+            <ul class="J-submenu submenu">
+                <%
+                $.each(itemClsOne.submenu, function (i, itemClsTwo) {
+                    var cls = '';
+
+                    if (itemClsTwo.submenu.length > 0) {
+                        cls = 'can-open J-can-open';
+                    }
+                %>
+                <li class="item">
+                    <div class="inner <%= cls %>">
+                        <% if (itemClsTwo.href != '') { %>
+                        <a href="<%= itemClsTwo.href %>" target="<%= itemClsTwo.target %><%= itemClsTwo.id %>" name="<%= itemClsTwo.name %>"><%= itemClsTwo.name %></a>
+                        <% } else { %>
+                        <span class="no-link">{{itemClsTwo.name}}</span>
+                        <% } %>
+                        <i class="icon-font icon-close">&#xe603</i>
+                        <i class="icon-font icon-open">&#xe604</i>
+                    </div>
+
+
+                    <% if (itemClsTwo.submenu.length > 0) { %>
+                    <div class="lastmenu-wrap">
+                        <ul class="lastmenu">
+                            <% $.each(itemClsTwo.submenu, function (i, itemClsThree) { %>
+                            <li class="item">
+                                <a href="<%= itemClsThree.href %>" target="<%= itemClsThree.target %><%= itemClsThree.id %>" class="cm-link-blue" name="<%= itemClsThree.name %>"><%= itemClsThree.name %></a>
+                            </li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                    <% } %>
+                </li>
                 <% }); %>
             </ul>
             <% } %>

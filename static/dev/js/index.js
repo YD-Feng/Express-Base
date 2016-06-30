@@ -1,7 +1,10 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
 var wrapMod = {
     clickY: 0,
     mainScroll: null,
+    tabScroll: null,
 
     //模块初始化
     init: function () {
@@ -10,8 +13,19 @@ var wrapMod = {
         _this.setContMinHeight();
         _this.getMenuData();
 
-        $(window).on('resize', function () {
-            _this.setContMinHeight();
+        _this.tabScroll = new iScroll('J-frame-tab', {
+            snap: 'li',
+            bounce: false, //是否超过实际位置反弹
+            bounceLock: false, //当内容少于滚动是否可以反弹，这个实际用处不大
+            momentum: true, //动量效果，拖动惯性
+            hideScrollbar: true, //隐藏滚动条
+            hScroll: true, //是否水平滚动
+            vScroll: false, //是否垂直滚动
+            hScrollbar: false, //是否显示水平滚动条
+            vScrollbar: false, //是否显示垂直滚动条
+            onBeforeScrollStart: function (e) {
+                e.preventDefault();
+            }
         });
 
         _this.bindEvents();
@@ -20,9 +34,11 @@ var wrapMod = {
     //设置内容区的最小高度
     setContMinHeight: function () {
         var _this = this,
-            h = $(window).height() - $('#J-header').outerHeight() - $('#J-footer').outerHeight();
+            h = $(window).height() - $('#J-header').outerHeight() - $('#J-footer').outerHeight(),
+            containerH = h - $('#J-frame-tab').outerHeight();
 
-        $('#J-sidebar, #J-container, #J-submenu-wrap').height(h);
+        $('#J-sidebar, #J-submenu-wrap').height(h);
+        $('#J-container').height(containerH);
         _this.mainScroll && _this.mainScroll.refresh();
     },
 
@@ -84,33 +100,90 @@ var wrapMod = {
         });
     },
 
+    //展示页面
+    showPage: function (opts) {
+        var _this = this;
+
+        if (!window.frames[opts.target]) {
+            var frame = document.createElement('iframe'),
+                $frameTabUl = $('#J-frame-tab').find('ul.inner'),
+                v = H.Storage.get('version');
+
+            frame.className = 'iframe';
+            frame.frameborder = 0;
+            frame.scrolling = 'auto';
+            frame.name = opts.target;
+            frame.src = opts.href + '?token=' + H.Cookie.get('userToken') + '&v=' + v;
+
+            $('#J-container').append(frame);
+
+            $frameTabUl.find('li').removeClass('active');
+            $frameTabUl
+                .append('<li class="item active" data-name="' + opts.target + '">' + opts.name + '</li>')
+                .width($frameTabUl.find('li').length * $frameTabUl.find('li').outerWidth());
+            _this.tabScroll && _this.tabScroll.refresh();
+            _this.tabScroll && _this.tabScroll.scrollToElement($frameTabUl.find('li').last()[0]);
+        } else {
+            var $li = $('#J-frame-tab').find('li[data-name=' + opts.target + ']');
+            $li.addClass('active').siblings().removeClass('active');
+            _this.tabScroll && _this.tabScroll.scrollToElement($li[0]);
+
+            window.frames[opts.target].location.href = opts.href + '?token=' + H.Cookie.get('userToken');
+        }
+
+        $('#J-container').find('iframe').hide();
+        $('#J-container').find('iframe[name=' + opts.target + ']').show();
+    },
+
     //事件绑定
     bindEvents: function () {
-        $(document)
-            .on('click', '#J-s-menu-cls-one div.J-item-cls-one-inner', function (e) {
-                var $this = $(this),
-                    $sidebar = $('#J-sidebar'),
-                    $parentLi = $(this).parent();
+        var _this = this;
 
-                if ($parentLi.hasClass('active')) {
-                    $parentLi
-                        .removeClass('active')
-                        .find('ul.J-s-menu-cls-two')
-                        .slideUp(100, function () {
-                            wrapMod.mainScroll && wrapMod.mainScroll.refresh();
-                        });
+        $(window).on('resize', function () {
+            _this.setContMinHeight();
+        });
+
+        $(document)
+            .on('mouseover', '#J-sidebar li', function (e) {
+                var $this = $(this);
+
+                $this.addClass('active');
+
+                if ($this.hasClass('J-has-submenu')) {
+                    $('#J-submenu-wrap')
+                        .show()
+                        .html($this.find('ul.J-submenu').clone());
+
+                    wrapMod.subScroll = null;
+                    wrapMod.subScroll = new iScroll('J-submenu-wrap', {
+                        snap: 'li',
+                        bounce: false, //是否超过实际位置反弹
+                        bounceLock: false, //当内容少于滚动是否可以反弹，这个实际用处不大
+                        momentum: true, //动量效果，拖动惯性
+                        hideScrollbar: true, //隐藏滚动条
+                        onBeforeScrollStart: function (e) {
+                            e.preventDefault();
+                        }
+                    });
+
                 } else {
-                    $parentLi
-                        .addClass('active')
-                        .find('ul.J-s-menu-cls-two')
-                        .slideDown(100, function () {
-                            wrapMod.mainScroll && wrapMod.mainScroll.refresh();
-                        })
-                        .end()
-                        .siblings()
-                        .removeClass('active')
-                        .find('ul.J-s-menu-cls-two')
-                        .hide();
+                    $('#J-submenu-wrap').hide();
+                }
+            })
+            .on('mouseleave', '#J-sidebar li', function (e) {
+                var $this = $(this),
+                    $toElement = e.toElement ? $(e.toElement) : $(e.relatedTarget);
+
+                $this.removeClass('active');
+
+                if ($toElement.closest('#J-submenu-wrap').length < 1) {
+                    $('#J-submenu-wrap').hide();
+                }
+            })
+            .on('mouseleave', '#J-submenu-wrap', function (e) {
+                var $toElement = $(e.toElement);
+                if ($toElement.closest('#J-sidebar li.J-has-submenu').length < 1) {
+                    $(this).hide();
                 }
             })
             .on('click', '#J-submenu-wrap div.J-can-open', function (e) {
@@ -132,13 +205,54 @@ var wrapMod = {
             .on('mousedown', '#J-sidebar a, #J-submenu-wrap a', function (e) {
                 wrapMod.clickY = e.pageY;
             })
-            .on('mouseup', '#J-sidebar a, #J-submenu-wrap a', function (e) {
+            .on('mouseup', '#J-sidebar a, #J-submenu-wrap a, #J-link-change-pwd', function (e) {
                 if (Math.abs(wrapMod.clickY - e.pageY) < 50) {
                     if (e.target.target != '_blank') {
-                        window.frames[e.target.target].location.href = e.target.href + '?token=' + H.Cookie.get('userToken');
+                        _this.showPage({
+                            target: e.target.target,
+                            href: e.target.href,
+                            name: e.target.name
+                        });
                     }
                 }
+            })
+            .on('mousedown', '#J-frame-tab li', function (e) {
+                wrapMod.clickX = e.pageX;
+            })
+            .on('mouseup', '#J-frame-tab li', function (e) {
+                if (Math.abs(wrapMod.clickX - e.pageX) < 50) {
+                    var $target = $(e.target);
+                    if (!$target.hasClass('active')) {
+                        $target.addClass('active').siblings().removeClass('active');
+
+                        $('#J-container').find('iframe').hide();
+                        $('#J-container').find('iframe[name=' + $target.data('name') + ']').show();
+                    }
+                }
+            })
+            .on('dblclick', '#J-frame-tab li', function (e) {
+                var $target = $(e.target),
+                    $ul = $target.parent();
+
+                if ($target.data('name') != 'home') {
+                    $target
+                        .prev().addClass('active')
+                        .end().remove();
+
+                    $ul.width($ul.find('li').length * $ul.find('li').outerWidth());
+
+                    $('#J-container')
+                        .find('iframe[name=' + $target.data('name') + ']')
+                        .prev().show()
+                        .end().remove();
+
+                    _this.tabScroll && _this.tabScroll.refresh();
+                }
             });
+
+        $(window).on('resize', function () {
+            wrapMod.setContMinHeight();
+        });
     }
 };
 
