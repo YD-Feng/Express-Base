@@ -10,6 +10,7 @@ var express = require('express'),
     session = require('express-session'),
     SessionStore = require('express-mysql-session'),
     log4js = require('log4js'),
+    validateEngine = require('./validate/validateEngine'),
 
     //生成一个 SessionStore 实例
     sessionStore = new SessionStore({
@@ -79,11 +80,13 @@ app.use(log4js.connectLogger(log4js.getLogger(), {
     level: log4js.levels.INFO
 }));
 
+app.use(validateEngine());
+
 //配置路由
 routes(app);
 
 //捕获404错误，并转发到错误处理器
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
@@ -93,7 +96,7 @@ app.use(function(req, res, next) {
 //错误处理器
 if (app.get('env') === 'development') {
     //开发环境下的错误处理器
-    app.use(function(err, req, res, next) {
+    app.use(function (err, req, res, next) {
         console.log(err);
         res.status(err.status || 500);
         res.send('error', {
@@ -104,7 +107,7 @@ if (app.get('env') === 'development') {
     });
 }
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     //生产环境下的错误处理器
     console.log(err);
     res.status(err.status || 500);
