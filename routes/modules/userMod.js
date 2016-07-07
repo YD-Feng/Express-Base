@@ -76,25 +76,13 @@ var crypto = require('crypto'),
 
         //获取用户列表
         getUserList: function (req, res) {
-            if (req.cookies.userToken) {
-
-                userSrv.getUserList(req.query, function (result) {
-                    res.send({
-                        code: 1,
-                        data: result,
-                        msg: ''
-                    });
-                });
-
-            } else {
-
+            userSrv.getUserList(req.query, function (result) {
                 res.send({
-                    code: 0,
-                    data: null,
-                    msg: '请先登录'
+                    code: 1,
+                    data: result,
+                    msg: ''
                 });
-
-            }
+            });
         },
 
         //检测用户登录状态
