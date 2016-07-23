@@ -2,7 +2,7 @@ var crypto = require('crypto'),
     userSrv = require('../../dataSrv/modules/userSrv'),
     userMod = {
         //用户登录
-        login: function () {
+        login: function (req, res) {
             var password = crypto.createHash('md5').update(req.body.password).digest('hex');
 
             userSrv.check({

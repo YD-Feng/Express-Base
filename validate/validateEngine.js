@@ -6,24 +6,17 @@ var validateEngine = function () {
                 field,
                 result,
                 params = typeof req.query == 'undefined' ? req.body : req.query,
+                resMethod = req.method == 'GET' ? 'jsonp' : 'send',
                 flag = true,
                 path = req.path;
 
             if (_.indexOf(validateConfig.mustLoginList, path) != -1) {
                 if (!req.cookies.userToken) {
-                    if (req.method == 'GET' && typeof params.callback != 'undefined') {
-                        res.jsonp({
-                            code: 1000,
-                            data: null,
-                            msg: '接口验证失败，请先登录'
-                        });
-                    } else {
-                        res.send({
-                            code: 1000,
-                            data: null,
-                            msg: '接口验证失败，请先登录'
-                        });
-                    }
+                    res[resMethod]({
+                        code: 1000,
+                        data: null,
+                        msg: '接口验证失败，请先登录'
+                    });
 
                     flag = false;
                 }
@@ -35,7 +28,7 @@ var validateEngine = function () {
 
                     result = validateField(params[field], arr[0], field, arr[1], params, validateConfig[path]);
                     if (result.code != 0) {
-                        res.send(result);
+                        res[resMethod](result);
                         flag = false;
                         break;
                     }

@@ -92,7 +92,7 @@ module.exports = function (fieldVal, rulesStr, fieldNameEn, fieldNameCn, params,
     /* 校验函数 */
         required = function (fieldVal, fieldNameEn, fieldNameCn) {
             if (typeof fieldVal == 'undefined' || fieldVal == '') {
-                return createResult(9999, '接口校验错误：' + (fieldNameCn || fieldNameEn) + '不能为空');
+                return createResult(9999, '接口校验错误：' + (fieldNameCn || fieldNameEn) + '为必传参数且不能为空');
             }
             return createResult(0);
         },
